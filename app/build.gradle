@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.example.rxjava_retrofit'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.rxjava_retrofit"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -36,4 +36,27 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    /// in order to exclude a module, we need to use implementation('package') structure
+    implementation('com.squareup.retrofit2:retrofit:2.9.0')
+    {
+        exclude module: 'okhttp'
+    }
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+
+    /// this is the retrofit rxJava adapter dependency
+    /// it is used to convert Call return types of retrofit methods to Observable
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+
+    def lifecycle_version = "2.5.1"
+    /// view model
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
 }
