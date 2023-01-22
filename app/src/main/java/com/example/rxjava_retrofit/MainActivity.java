@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.rxjava_retrofit.adapters.ProductViewAdapter;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 for(Product product: products){
                     System.out.println(product.id);
                 }
+                removeLoadingView();
                 setProductList(products);
             }
         };
@@ -62,5 +64,11 @@ public class MainActivity extends AppCompatActivity {
         ProductViewAdapter productViewAdapter = new ProductViewAdapter(product);
 
         recyclerView.setAdapter(productViewAdapter);
+    }
+
+    /// we remove the loader when items are loaded
+    private void removeLoadingView() {
+        findViewById(R.id.loader).setVisibility(View.GONE);
+        findViewById(R.id.product_recycler_view).setVisibility(View.VISIBLE);
     }
 }
