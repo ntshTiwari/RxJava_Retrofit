@@ -8,7 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="horizontal_line">#90909090</color>
+    <color name="horizontal_line">#90F2F2F2</color>
     <color name="primary_text_color">#FF6F727F</color>
     <color name="secondary_text_color">#FFD1D1D1</color>
+
+    <color name="card_bg">#FFf9f9f9</color>
 </resources>

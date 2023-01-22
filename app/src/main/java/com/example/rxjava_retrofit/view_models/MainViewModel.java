@@ -24,6 +24,9 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Product>> products = new MutableLiveData<ArrayList<Product>>();
     public LiveData getProducts = products;
 
+    private MutableLiveData<String> error = new MutableLiveData<>();
+    public LiveData getError = error;
+
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public MainViewModel() {
@@ -69,6 +72,7 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onError(@NonNull Throwable e) {
                 Log.e("getProduct Error:", e.toString());
+                error.postValue(e.toString());
             }
 
             @Override
