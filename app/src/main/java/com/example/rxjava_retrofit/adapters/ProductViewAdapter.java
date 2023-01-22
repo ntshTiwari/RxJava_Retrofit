@@ -1,0 +1,77 @@
+package com.example.rxjava_retrofit.adapters;
+
+import android.graphics.Paint;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.rxjava_retrofit.R;
+import com.example.rxjava_retrofit.models.Product;
+
+import java.util.ArrayList;
+
+public class ProductViewAdapter extends
+        RecyclerView.Adapter<ProductViewAdapter.ProductViewHolder> {
+
+    private ArrayList<Product> products;
+
+    public ProductViewAdapter(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public void addNewList(ArrayList<Product> newProducts){
+        products.addAll(newProducts);
+        notifyDataSetChanged();
+    }
+
+    @NonNull
+    @Override
+    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.product_view_layout, parent, false);
+        return new ProductViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        Product product = products.get(position);
+
+        holder.productId.setText(String.valueOf(product.id));
+        holder.productTitle.setText(product.title);
+        holder.productPrice.setText(String.valueOf(product.price) + " $");
+
+        holder.productPreviousPrice.setPaintFlags(holder.productPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        Glide.with(holder.root).load(product.image).into(holder.productImageView);
+    }
+
+    @Override
+    public int getItemCount() {
+        return products.size();
+    }
+
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        public ImageView productImageView;
+        public TextView productId, productTitle, productPrice, productPreviousPrice;
+        public View root;
+        public ProductViewHolder(View view){
+            super(view);
+
+            productImageView = view.findViewById(R.id.product_image);
+
+            productId = view.findViewById(R.id.product_id);
+            productTitle = view.findViewById(R.id.product_id);
+            productPrice = view.findViewById(R.id.product_price);
+            productPreviousPrice = view.findViewById(R.id.product_previous_price);
+
+            root = view.getRootView();
+        }
+    }
+
+}

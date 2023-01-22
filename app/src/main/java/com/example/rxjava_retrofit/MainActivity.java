@@ -3,9 +3,12 @@ package com.example.rxjava_retrofit;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.example.rxjava_retrofit.adapters.ProductViewAdapter;
 import com.example.rxjava_retrofit.models.Product;
 import com.example.rxjava_retrofit.view_models.MainViewModel;
 
@@ -36,7 +39,17 @@ public class MainActivity extends AppCompatActivity {
                 for(Product product: products){
                     System.out.println(product.id);
                 }
+                setProductList(products);
             }
         };
+    }
+
+    private void setProductList(ArrayList<Product> product) {
+        RecyclerView recyclerView = findViewById(R.id.product_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ProductViewAdapter productViewAdapter = new ProductViewAdapter(product);
+
+        recyclerView.setAdapter(productViewAdapter);
     }
 }
