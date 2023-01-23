@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RxJava_Retrofit</string>
+
+    <string name="search_hint">Search product</string>
 </resources>

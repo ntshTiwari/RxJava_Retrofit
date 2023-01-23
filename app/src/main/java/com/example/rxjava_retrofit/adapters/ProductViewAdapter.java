@@ -52,7 +52,10 @@ public class ProductViewAdapter extends
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = products.get(position);
 
-        holder.productId.setText(holder.productId.getText() + String.valueOf(product.id));
+        System.out.println(String.valueOf(product.id));
+        System.out.println(holder.productId.getText() + String.valueOf(product.id));
+
+        holder.productId.setText("Vendor code: " + String.valueOf(product.id));
         holder.productTitle.setText(product.title);
         holder.productPrice.setText(String.valueOf(product.price) + " $");
 
