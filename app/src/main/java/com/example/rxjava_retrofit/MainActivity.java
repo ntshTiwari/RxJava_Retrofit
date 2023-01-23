@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
+    MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         /// handle if it is a search intent
         handleIntent(getIntent());
-
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         viewModel.getProducts.observe(this, getProductObserver());
         viewModel.getError.observe(this, getErrorObserver());
@@ -55,11 +54,22 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    /// create viewmodel according to search screen or not
     private void handleIntent(Intent intent){
         /// if this is a search intent
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             String searchQuery = intent.getStringExtra(SearchManager.QUERY);
             Log.e("Search Intent", searchQuery);
+
+            viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MainViewModel.initializer(
+                searchQuery
+            ))).get(MainViewModel.class);
+
+            /// if it is search screen, then have code to navigate back
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        } else {
+            viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         }
     }
 
@@ -113,4 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        onBackPressed();
+//        return true;
+//    }
 }
