@@ -67,15 +67,13 @@ public class MainViewModel extends ViewModel {
 
     private void startFetchingProducts(@Nullable String searchQuery) {
         Observable<ArrayList<Product>> observable = ApiRepository.getApiEndPoints().getProducts();
+        DisposableObserver<ArrayList<Product>> newObserver = getProductObserver(searchQuery);
 
-        observable.subscribeOn(Schedulers.io());
-        observable.observeOn(AndroidSchedulers.mainThread());
-
-        if(searchQuery != null){
-            observable.map(
-                    new Function<ArrayList<Product>, ArrayList<Product>>() {
-                        @Override
-                        public ArrayList<Product> apply(ArrayList<Product> newProducts) throws Exception {
+        observable.map(
+                new Function<ArrayList<Product>, ArrayList<Product>>() {
+                    @Override
+                    public ArrayList<Product> apply(ArrayList<Product> newProducts) throws Exception {
+                        if(searchQuery != null ){
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 ArrayList<Product> filteredList = new ArrayList<>();
                                 newProducts.forEach(
@@ -85,43 +83,77 @@ public class MainViewModel extends ViewModel {
                                             }
                                         })
                                 );
-
-                                System.out.println("filteredList length" + String.valueOf(filteredList.size()));
-
                                 return filteredList;
                             }
 
                             /// return blank array if outdated android version
                             return new ArrayList<>();
+                        } else {
+                            return newProducts;
                         }
                     }
-            );
-        }
+                }
+        )
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(newObserver);
 
-        DisposableObserver<ArrayList<Product>> newObserver = getProductObserver(searchQuery);
-
-        observable.subscribeWith(newObserver);
         compositeDisposable.add(newObserver);
+
+        ///// In order for map to work we need to write everything together
+
+//        observable.subscribeOn(Schedulers.io());
+//        observable.observeOn(AndroidSchedulers.mainThread());
+//        observable.subscribeWith(newObserver);
+//
+//        if(searchQuery != null){
+//            observable.map(
+//                    new Function<ArrayList<Product>, ArrayList<Product>>() {
+//                        @Override
+//                        public ArrayList<Product> apply(ArrayList<Product> newProducts) throws Exception {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                ArrayList<Product> filteredList = new ArrayList<>();
+//                                newProducts.forEach(
+//                                        (_product -> {
+//                                            if(_product.title.toLowerCase().contains(searchQuery)){
+//                                                filteredList.add(_product);
+//                                            }
+//                                        })
+//                                );
+//
+//                                System.out.println("filteredList length" + String.valueOf(filteredList.size()));
+//
+//                                return filteredList;
+//                            }
+//
+//                            /// return blank array if outdated android version
+//                            return new ArrayList<>();
+//                        }
+//                    }
+//            );
+//        }
+//
+//
     }
 
     private DisposableObserver<ArrayList<Product>> getProductObserver(String searchQuery) {
         return new DisposableObserver<ArrayList<Product>>() {
             @Override
             public void onNext(@NonNull ArrayList<Product> newProducts) {
-                ArrayList<Product> filteredList = new ArrayList<>();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && searchQuery != null) {
-                    newProducts.forEach(
-                            (_product -> {
-                                if(_product.title.toLowerCase().contains(searchQuery.toLowerCase())){
-                                    filteredList.add(_product);
-                                }
-                            })
-                    );
-                    products.postValue(filteredList);
-                    Log.e("getProductObserver():", String.valueOf(newProducts.size()));
-                } else {
+//                ArrayList<Product> filteredList = new ArrayList<>();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && searchQuery != null) {
+//                    newProducts.forEach(
+//                            (_product -> {
+//                                if(_product.title.toLowerCase().contains(searchQuery.toLowerCase())){
+//                                    filteredList.add(_product);
+//                                }
+//                            })
+//                    );
+//                    products.postValue(filteredList);
+//                    Log.e("getProductObserver():", String.valueOf(newProducts.size()));
+//                } else {
                     products.postValue(newProducts);
-                }
+//                }
             }
 
             @Override
